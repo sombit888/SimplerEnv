@@ -5,14 +5,13 @@ import tensorflow as tf
 
 from simpler_env.evaluation.argparse import get_args
 from simpler_env.evaluation.maniskill2_evaluator import maniskill2_evaluator
-from simpler_env.policies.octo.octo_server_model import OctoServerInference
-from simpler_env.policies.rt1.rt1_model import RT1Inference
-
-try:
-    from simpler_env.policies.octo.octo_model import OctoInference
-except ImportError as e:
-    print("Octo is not correctly imported.")
-    print(e)
+# from simpler_env.policies.octo.octo_server_model import OctoServerInference
+# from simpler_env.policies.rt1.rt1_model import RT1Inference
+# try:
+#     from simpler_env.policies.octo.octo_model import OctoInference
+# except ImportError as e:
+#     print("Octo is not correctly imported.")
+#     print(e)
 
 
 if __name__ == "__main__":
@@ -31,6 +30,7 @@ if __name__ == "__main__":
 
     # policy model creation; update this if you are using a new policy model
     if args.policy_model == "rt1":
+        from simpler_env.policies.rt1.rt1_model import RT1Inference 
         assert args.ckpt_path is not None
         model = RT1Inference(
             saved_model_path=args.ckpt_path,
@@ -38,6 +38,7 @@ if __name__ == "__main__":
             action_scale=args.action_scale,
         )
     elif "octo" in args.policy_model:
+        from simpler_env.policies.octo.octo_model import OctoInference  
         if args.ckpt_path is None or args.ckpt_path == "None":
             args.ckpt_path = args.policy_model
         if "server" in args.policy_model:
@@ -53,6 +54,21 @@ if __name__ == "__main__":
                 init_rng=args.octo_init_rng,
                 action_scale=args.action_scale,
             )
+    elif args.policy_model == "openvla":
+        from simpler_env.policies.openvla.openvla_model import OpenVLAInference
+        assert args.ckpt_path is not None
+        model = OpenVLAInference(
+            saved_model_path=args.ckpt_path,
+            policy_setup=args.policy_setup,
+            action_scale=args.action_scale,
+        )
+    elif args.policy_model == "ecot":
+        from simpler_env.policies.ecot.ecot_model import ECOTInference
+        assert args.ckpt_path is not None
+        model = ECOTInference(
+            saved_model_path=args.ckpt_path,
+            policy_setup=args.policy_setup,
+            action_scale=args.action_scale) 
     else:
         raise NotImplementedError()
 
