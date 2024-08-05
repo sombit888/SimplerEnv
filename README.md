@@ -17,10 +17,18 @@
 ##  Run specific envaluations
 - ` bash scripts/openvla/openvla_ood_objects.sh`
 - 
-TODOS to add additional scripts after rechecking
+<!-- TODOS to add additional scripts after rechecking -->
 
 ## Obtain Simpler-Env eval metrics
 - `python tools/calc_metrics_evaluation_videos.py`, pass the results dir in args/change the default.
 
-## Obtain Specific Evaluations
-	TODO 
+## Obtain OOD Obj evals
+- `bash scripts/openvla/openvla_ood_objects.sh`, change the logging dir 
+
+## Obtain differnt background evals
+- `bash scripts/openvla/openvla_different_background.sh`, change the logging dir
+
+## Obtain differnt camera orientation evals
+- `bash scripts/openvla/openvla_different_camera.sh`, change the logging dir
+
+	
