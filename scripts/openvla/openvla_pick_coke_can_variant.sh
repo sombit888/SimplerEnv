@@ -3,7 +3,7 @@ gpu_id=0
 
 declare -a policy_models=("openvla")
 declare -a ckpt_path=("openvla/openvla-7b") ### ckpt_path on hf
-declare -a logging_dir=("scratch/sombit_dey/results_openvla")
+declare -a logging_dir=("/scratch/sombit_dey/results_openvla")
 
 # lr_switch=laying horizontally but flipped left-right to match real eval; upright=standing; laid_vertically=laying vertically
 declare -a coke_can_options_arr=("lr_switch=True" "upright=True" "laid_vertically=True")

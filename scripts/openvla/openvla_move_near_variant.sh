@@ -1,7 +1,7 @@
 gpu_id=0
 declare -a policy_models=("openvla")
 declare -a ckpt_path=("openvla/openvla-7b") ### ckpt_path on hf
-declare -a logging_dir=("scratch/sombit_dey/results_openvla")
+declare -a logging_dir=("/scratch/sombit_dey/results_openvla")
 
 for ckpt_path in "${arr[@]}"; do echo "$ckpt_path"; done
 
