@@ -29,7 +29,10 @@ if __name__ == "__main__":
         )
 
     # policy model creation; update this if you are using a new policy model
-    if args.policy_model == "rt1":
+    if 'fast' in args.policy_model:
+        from simpler_env.policies.fast_wrong.fast_wrong import FastWrongInference
+        model = FastWrongInference()
+    elif args.policy_model == "rt1":
         from simpler_env.policies.rt1.rt1_model import RT1Inference 
         assert args.ckpt_path is not None
         model = RT1Inference(

@@ -130,44 +130,46 @@ def run_maniskill2_eval_single_episode(
             print(task_description)
         is_final_subtask = env.is_final_subtask()
 
-        print(timestep, info)
 
         image = get_image_from_maniskill2_obs_dict(env, obs, camera_name=obs_camera_name)
         images.append(image)
         timestep += 1
 
     episode_stats = info.get("episode_stats", {})
-
+    print(f"Episode stats: {episode_stats}")
     # save video
-    env_save_name = env_name
-    for k, v in additional_env_build_kwargs.items():
-        env_save_name = env_save_name + f"_{k}_{v}"
-    if additional_env_save_tags is not None:
-        env_save_name = env_save_name + f"_{additional_env_save_tags}"
-    ckpt_path_basename = ckpt_path if ckpt_path[-1] != "/" else ckpt_path[:-1]
-    ckpt_path_basename = ckpt_path_basename.split("/")[-1]
-    if obj_variation_mode == "xy":
-        video_name = f"{success}_obj_{obj_init_x}_{obj_init_y}"
-    elif obj_variation_mode == "episode":
-        video_name = f"{success}_obj_episode_{obj_episode_id}"
-    for k, v in episode_stats.items():
-        video_name = video_name + f"_{k}_{v}"
-    video_name = video_name + ".mp4"
-    if rgb_overlay_path is not None:
-        rgb_overlay_path_str = os.path.splitext(os.path.basename(rgb_overlay_path))[0]
-    else:
-        rgb_overlay_path_str = "None"
-    r, p, y = quat2euler(robot_init_quat)
-    video_path = f"{ckpt_path_basename}/{scene_name}/{control_mode}/{env_save_name}/rob_{robot_init_x}_{robot_init_y}_rot_{r:.3f}_{p:.3f}_{y:.3f}_rgb_overlay_{rgb_overlay_path_str}/{video_name}"
-    video_path = os.path.join(logging_dir, video_path)
-    write_video(video_path, images, fps=5)
+    save_video = False
+    if(save_video == True):
+        env_save_name = env_name
+        for k, v in additional_env_build_kwargs.items():
+            env_save_name = env_save_name + f"_{k}_{v}"
+        if additional_env_save_tags is not None:
+            env_save_name = env_save_name + f"_{additional_env_save_tags}"
+        ckpt_path_basename = ckpt_path if ckpt_path[-1] != "/" else ckpt_path[:-1]
+        ckpt_path_basename = ckpt_path_basename.split("/")[-1]
+        if obj_variation_mode == "xy":
+            video_name = f"{success}_obj_{obj_init_x}_{obj_init_y}"
+        elif obj_variation_mode == "episode":
+            video_name = f"{success}_obj_episode_{obj_episode_id}"
+        for k, v in episode_stats.items():
+            video_name = video_name + f"_{k}_{v}"
+        video_name = video_name + ".mp4"
+        if rgb_overlay_path is not None:
+            rgb_overlay_path_str = os.path.splitext(os.path.basename(rgb_overlay_path))[0]
+        else:
+            rgb_overlay_path_str = "None"
+        r, p, y = quat2euler(robot_init_quat)
+        video_path = f"{ckpt_path_basename}/{scene_name}/{control_mode}/{env_save_name}/rob_{robot_init_x}_{robot_init_y}_rot_{r:.3f}_{p:.3f}_{y:.3f}_rgb_overlay_{rgb_overlay_path_str}/{video_name}"
+        video_path = os.path.join(logging_dir, video_path)
+        write_video(video_path, images, fps=5)
 
-    # save action trajectory
-    action_path = video_path.replace(".mp4", ".png")
-    action_root = os.path.dirname(action_path) + "/actions/"
-    os.makedirs(action_root, exist_ok=True)
-    action_path = action_root + os.path.basename(action_path)
-    model.visualize_epoch(predicted_actions, images, save_path=action_path)
+        # save action trajectory
+        action_path = video_path.replace(".mp4", ".png")
+        action_root = os.path.dirname(action_path) + "/actions/"
+        os.makedirs(action_root, exist_ok=True)
+        action_path = action_root + os.path.basename(action_path)
+        model.visualize_epoch(predicted_actions, images, save_path=action_path)
+
 
     return success == "success"
 
